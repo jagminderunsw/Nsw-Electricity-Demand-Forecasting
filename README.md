@@ -10,7 +10,7 @@ The **LSTM was the strongest model**, achieving an MAE of **53.87 MW**, an RMSE 
 
 ## Colab portfolio notebook with GenAI Q&A
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jagminderunsw/Nsw-Electricity-Demand-Forecasting/blob/main/Electricity_Forecasting_Portfolio.ipynb)
+
 
 `Electricity_Forecasting_Portfolio.ipynb` is the recommended starting point
 for reviewers. It loads either the full prediction file from Google Drive or
