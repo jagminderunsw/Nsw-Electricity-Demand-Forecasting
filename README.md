@@ -8,27 +8,27 @@ The **LSTM was the strongest model**, achieving an MAE of **53.87 MW**, an RMSE 
 
 ![Model performance comparison](results/figures/01_model_performance_comparison.png)
 
-## Colab portfolio notebook with GenAI Q&A
+## Portfolio notebook with grounded GenAI analysis
 
+[Electricity_Forecasting_GenAI_Analyst_Enhanced.ipynb](Electricity_Forecasting_GenAI_Analyst_Enhanced.ipynb)
+is the recommended starting point for reviewers. It downloads a public 90-day prediction sample
+from this repository, validates the timestamps and model outputs, recalculates
+the evaluation metrics and launches an interactive Gradio analyst. It does not
+request Google Drive access in its default public-demo configuration.
 
-
-`Electricity_Forecasting_Portfolio.ipynb` is the recommended starting point
-for reviewers. It loads either the full prediction file from Google Drive or
-the public 90-day GitHub sample, validates the data, recalculates model metrics
-and launches a Gradio question-and-answer interface.
-
-The answering layer is deliberately grounded: Pandas calculates the numerical
-evidence, and GenAI explains only that compact evidence. The raw prediction
-table is not sent to the model. Without an API key, common questions still work
-through deterministic fallback answers.
+The language model does not calculate metrics or execute arbitrary Python.
+Instead, it selects from six allow-listed analytical functions. Pandas performs
+the requested calculations against the loaded prediction table, Plotly creates
+charts, and the model explains the verified results. The complete prediction
+table is not sent to the OpenAI API.
 
 ### Launch the temporary Gradio demo
 
-1. Open the notebook using the **Open in Colab** badge above.
+1. Open [Electricity_Forecasting_GenAI_Analyst_Enhanced.ipynb](Electricity_Forecasting_GenAI_Analyst_Enhanced.ipynb)
+   in Google Colab.
 2. Run the cells in order.
-3. For free-form GenAI answers, add a Colab secret named `OPENAI_API_KEY` and
-   grant the notebook access. Do not paste the key into a notebook cell or save
-   it in GitHub.
+3. Add a Colab secret named `OPENAI_API_KEY` and grant the notebook access. Do
+   not paste the key into a cell, output, screenshot or GitHub file.
 4. Run the final Gradio cell and open the generated `gradio.live` link.
 5. Keep the Colab runtime running while demonstrating the app. Start the cell
    again whenever a fresh temporary link is needed.
@@ -38,28 +38,37 @@ so no additional deployment setup is required.
 
 ![GenAI-assisted Gradio question-and-answer interface](results/figures/07_genai_gradio_preview.png)
 
-Example questions include:
+Strong demonstration questions include:
 
-- Which model performed best?
-- Compare LSTM and XGBoost using RMSE.
-- What was the largest forecasting error?
-- What period does this analysis cover?
-- What are the limitations of this project?
+- Plot actual demand and all model outputs for any five random consecutive days.
+- Compare LSTM, XGBoost and the persistence baseline over the full loaded period.
+- Show the five largest LSTM forecasting errors.
+- Analyse average demand by hour of day and chart it.
+- Which weekday has the highest average demand?
+- What happened at the timestamp containing the largest XGBoost error?
+- Summarise the modelling results and limitations for a hiring manager.
 
 ## How the grounded analyst works
 
-With the full Google Drive artifact, the notebook works over the complete
+With the full private artifact, the notebook can work over the complete
 **39,235-row common test period**; the public GitHub fallback uses a compact
-90-day sample. Numerical questions are answered by two allow-listed Pandas tools:
+90-day sample. The approved functions are:
 
-- `get_observation` retrieves one exact timestamp and calculates model errors.
-- `analyse_period` recalculates demand statistics and model metrics for a date
+- `get_observation` — retrieves an exact or nearest timestamp and calculates
+  each model's error.
+- `analyse_period` — calculates demand statistics and model metrics for a date
   range.
+- `plot_period` — plots actual demand and every model output for a requested or
+  reproducible random period.
+- `find_largest_errors` — identifies the largest absolute forecasting errors.
+- `compare_models` — ranks selected models using MAE, RMSE, MAPE and R².
+- `analyse_demand_patterns` — analyses and charts demand by hour, weekday or
+  month.
 
-The OpenAI Responses API chooses when to call these tools and explains their
-JSON results. The model never receives the complete prediction table, cannot
-execute arbitrary code, and is instructed not to present the backtest as a
-live forecast.
+The OpenAI Responses API chooses which approved function to call and explains
+its JSON result. It cannot execute arbitrary code and is instructed to describe
+the outputs as a historical backtest rather than a live forecast. Chart requests
+are returned to a separate Gradio plot panel.
 
 ```mermaid
 flowchart LR
@@ -68,8 +77,16 @@ flowchart LR
     O --> T{Approved tool call}
     T --> A[get_observation]
     T --> P[analyse_period]
+    T --> C[plot_period]
+    T --> E[find_largest_errors]
+    T --> M[compare_models]
+    T --> R[analyse_demand_patterns]
     A --> D[(Historical predictions)]
     P --> D
+    C --> D
+    E --> D
+    M --> D
+    R --> D
     D --> O
     O --> G
 ```
@@ -210,6 +227,7 @@ Temperatures above 40°C occur infrequently in Sydney. Predictions at the extrem
 ```text
 NSW-Electricity-Demand-Forecasting/
 |
+|-- Electricity_Forecasting_GenAI_Analyst_Enhanced.ipynb
 |-- Electricity_Forecasting_Portfolio.ipynb
 |
 |-- notebooks/
@@ -245,11 +263,15 @@ NSW-Electricity-Demand-Forecasting/
 The notebooks are designed for Google Colab. The LSTM notebook should be run with a GPU runtime. Install the complete modelling environment with `requirements-training.txt`; `requirements.txt` contains only the lightweight Gradio notebook dependencies.
 
 For the portfolio demonstration, open
-`Electricity_Forecasting_Portfolio.ipynb`, set the Google Drive prediction path
-near the top, and run the cells in order. Add `OPENAI_API_KEY` through Colab
-Secrets only if free-form GenAI answers are required; never store a key in the
+`Electricity_Forecasting_GenAI_Analyst_Enhanced.ipynb` and run the cells in
+order. The public sample works without Google Drive. Set
+`USE_GOOGLE_DRIVE = True` only when you want to use your own full prediction
+file. Add `OPENAI_API_KEY` through Colab Secrets; never store a key in the
 notebook or repository. The final cell creates the temporary Gradio link used
 for the interview demonstration.
+
+`Electricity_Forecasting_Portfolio.ipynb` remains as the lightweight portfolio
+analysis notebook. The enhanced notebook is the primary interactive GenAI demo.
 
 1. Create the following folders in Google Drive:
 
