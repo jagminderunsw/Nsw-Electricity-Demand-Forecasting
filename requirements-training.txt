@@ -1,0 +1,8 @@
+-r requirements.txt
+matplotlib
+seaborn
+scikit-learn
+xgboost
+tensorflow
+keras-tuner
+joblib

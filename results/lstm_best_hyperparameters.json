@@ -1,0 +1,7 @@
+{
+  "units_1": 128,
+  "units_2": 64,
+  "dropout": 0.1,
+  "l2": 1e-06,
+  "learning_rate": 0.001
+}
