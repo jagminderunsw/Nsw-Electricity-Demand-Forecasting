@@ -349,9 +349,9 @@ Future work could add more years of extreme-weather data, multiple weather stati
 
 ## About this portfolio version
 
-This repository is an independent reconstruction and extension of work I originally explored as part of a university group capstone project.
+This repository is an independent work I originally explored as part of a university group capstone project.
 
-For this portfolio version, I independently rebuilt the data preparation, exploratory data analysis, persistence baseline, XGBoost model, LSTM sequence model, Hyperband tuning, common-timestamp evaluation, residual analysis and final visualisations. The original group report addressed a broader research problem; the notebooks, experiments and results presented here were recreated for this individual portfolio.
+For this portfolio version, I independently built the data preparation, exploratory data analysis, persistence baseline, XGBoost model, LSTM sequence model, Hyperband tuning, common-timestamp evaluation, residual analysis and final visualisations. The original group report addressed a broader research problem; the notebooks, experiments and results presented here were recreated for this individual portfolio.
 
 ## Tools
 
